@@ -10,7 +10,7 @@ $(function(){
 	  Parse.FacebookUtils.init({
 	    appId      : '772451966098433', // Facebook App ID
 	    channelUrl : '//travelbuddydev.parseapp.com/channel.html', // Channel File
-	    status     : true, // check login status
+	    //status     : true, // check login status
 	    cookie     : true, // enable cookies to allow Parse to access the session
 	    xfbml      : true  // parse XFBML
 	  });
