@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "TravelBuddyDev": {
+            "applicationId": "ygllhC3rTkJ6tXIVmYSjeoyFX5f3qzgt6l1zHko6", 
+            "masterKey": "GymfFzpnSrkZ1fQubqUu7l1RyeXkd5njqk2sl6tE"
+        }, 
+        "_default": {
+            "link": "TravelBuddyDev"
+        }
+    }
+}
