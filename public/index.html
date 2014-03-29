@@ -1,9 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+  <title>My ParseApp site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
 
-<html>
-  <head>
-    <title>My ParseApp site</title>
-  </head>
-  <body>
-    Hello World!
-  </body>
+  <!-- Libraries -->
+  <script src="js/lib/respond.js"></script>
+  <script src="js/lib/jquery-1.11.0.min.js"></script>
+  <script src="js/lib/bootstrap.min.js"></script>
+  <script src="js/lib/underscore-min.js"></script>
+  <script src="js/lib/parse-1.2.18.min.js"></script>
+
+  <!-- App code -->
+  <script src="js/app.js"></script>
+</head>
+<body>
+  <!-- App Interface -->
+  <div class="container" id="app">
+  	<h1>Travel Buddy</h1>
+  	<div class="content">
+  	</div>
+  	<div id="credits">
+  		<p>Powered by <a href="https://www.parse.com">Parse</a> using the <a href="https://www.parse.com/docs/js_guide">JavaScript SDK</a>.<br/><br/>
+  		</p>
+  	</div>
+  </div> <!-- End of container -->
+
+  <!-- Templates -->
+  <script type="text/template" id="login-template">
+		<h2 class="cover-heading">Travel with others.</h2>
+		<p class="lead">Connect and meet travelers from all around the world.</p>
+		<p>
+	    <button id="login" type="button" class="btn btn-primary btn-lg btn-block">Login with Facebook</button>
+	  </p>
+  </script>
+  
+  <script type="text/template" id="profile-template">
+		<h2 class="cover-heading">This is your profile</p>
+		<p class="lead">You may click the button below to logout.</p>
+		<p>
+	    <button id="logout" type="button" class="btn btn-danger btn-lg btn-block">Logout</button>
+	  </p>
+	</script>
+
+</body>
 </html>
