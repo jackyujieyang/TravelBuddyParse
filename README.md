@@ -12,3 +12,8 @@ To deploy:
 parse deploy [target]
 ```
 
+## Integration with Facebook
+
+Used [Parse.FacebookUtils class](https://parse.com/docs/js_guide#fbusers), [Facebook SDK for JS](https://developers.facebook.com/docs/javascript), and [Facebook Login JS SDK](https://developers.facebook.com/docs/facebook-login/login-flow-for-web).
+
+
