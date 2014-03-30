@@ -47,7 +47,8 @@ $(function(){
 	var ProfileView = Parse.View.extend({
 		events: {
 			"click #logout": "logout",
-			"click #edit": "editProfile"
+			"click #edit": "editProfile",
+			"click #match": "match"
 		},
 		el: ".content",
 		template: _.template($('#profile-template').html()),
@@ -83,6 +84,11 @@ $(function(){
 			} else {
 				alert("There's an error logging out!");
 			}
+		},
+		match: function() {
+			new HomeView();
+			this.undelegateEvents();
+			delete this;
 		}
 	});
 
@@ -95,6 +101,22 @@ $(function(){
 	 * and edit his own profile.
 	 */
 	var HomeView = Parse.View.extend({
+		events: {
+			"click #profile": "profile"
+		},
+		el: ".content",
+		template: _.template($('#home-view-template').html()),
+		initialize: function() {
+			this.render();
+		},
+		render: function() {
+			$(this.el).html(this.template);
+		},
+		profile: function() {
+			new ProfileView();
+			this.undelegateEvents();
+			delete this;
+		}
 	});
 
 	/*
