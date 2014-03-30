@@ -5,9 +5,8 @@
   <title>Travel Buddy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="css/bootstrap.min.css" rel="stylesheet">
-  <!--
   <link href="css/custom.css" rel="stylesheet">
--->
+
   <!-- Libraries -->
   <script src="js/lib/respond.js"></script>
   <script src="js/lib/jquery-1.11.0.min.js"></script>
@@ -21,7 +20,7 @@
 <body>
 <div id="fb-root"></div>
   <!-- App Interface -->
-  <div class="container" id="app">
+  <div class="container col-xs-12 col-sm-12" id="app">
   	<div class="content">
   	</div>
   </div>
@@ -41,7 +40,7 @@
   <script type="text/template" id="oldLogin-template">
   <header id="header"></header>
       <div class="login">
-        <form class="login-form">
+        <form role="form" class="login-form">
           <h2>Log In</h2>
           <div class="error" style="display:none"></div>
           <input type="text" id="login-username" placeholder="Username" />
@@ -49,7 +48,7 @@
           <button>Log In</button>
         </form>
 
-        <form class="signup-form">
+        <form role="form" class="signup-form">
           <h2>Sign Up</h2>
           <div class="error" style="display:none"></div>
           <input type="text" id="signup-username" placeholder="Username" />
@@ -62,14 +61,26 @@
   <script type="text/template" id="oldInfo-template">
     <header id="header"></header>
       <div class="enterinfo">
-        <form class="enterinfo-form">
+        <form role="form" class="enterinfo-form">
           <h2>Complete your information</h2>
           <div class="error" style="display:none"></div>
-          <input type="text" id="first-name" placeholder="First Name" />
-          <input type="text" id="last-name" placeholder="Last Name" />
-          <input type="text" id="email" placeholder="Email" />
-          <input type="text" id="top-dest" placeholder="Top Destination" />
-          <button>Submit</button>
+          <div class="form-group">
+            <label for="inputFirstName">First name</label>
+            <input type="text" id="first-name" placeholder="First Name" />
+          </div>
+          <div class="form-group">
+            <label for="inputLastName">Last name</label>
+            <input type="text" id="last-name" placeholder="Last Name" />
+          </div>
+          <div class="form-group">
+            <label for="inputEmail">Email address</label>
+            <input type="text" id="email" placeholder="Email" />
+          </div>
+          <div class="form-group">
+            <label for="inputEmail">Top destination</label>
+            <input type="text" id="top-dest" placeholder="Top Destination" />
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
         </form>
       </div>
   </script>
