@@ -126,18 +126,27 @@ $(function(){
 			var topDest = this.$("#top-dest").val();
 
 			var user = Parse.User.current();
+			user.set({
+				firstName: firstName,
+				lastName: lastName,
+				email: email,
+				topDest: topDest
+			});
+			/*
 			user.set("firstName", firstName);
 			user.set("lastName", lastName);
-			user.set("email", email);
+			user.setEmail(email);
 			user.set("topDest", topDest);
-			user.signUp(null, {
+			*/
+			user.save(null, {
 				success: function(user) {
-					console.log("successfully saved user info.");
+					alert("successfully saved user info.");
 					new ProfileView();
 					self.undelegateEvents();
 					delete self;
 				},
 				error: function(user, error) {
+					alert(error);
 					console.log(error);
 				}
 			});
@@ -241,14 +250,11 @@ $(function(){
 			this.render();
 		},
 		render: function() {
-			new LoginView();
-			/*
 			if (Parse.User.current()) {
 				new ProfileView();
 			} else {
 				new LoginView();
 			}
-			*/
 		}
 	});
 
