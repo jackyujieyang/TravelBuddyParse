@@ -95,8 +95,8 @@ $(function(){
 	});
 
 	/* 
-	 * HomeView
-	 * The HomeView display a collection of matches
+	 * MatchView
+	 * The MatchView display a collection of matches
 	 * to the user. The user can click on any of the
 	 * record to see profiles of matched travlers.
 	 * He can also tab Profile on the Nav bar to go see
