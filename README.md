@@ -12,7 +12,7 @@ To deploy:
 parse deploy [target]
 ```
 
-You should be able to see the live site at: [travelbuddydev.parseapp.com](travelbuddydev.parseapp.com).
+You should be able to see the live site at: [travelbuddydev.parseapp.com](http://travelbuddydev.parseapp.com).
 
 ## Integration with Facebook
 
