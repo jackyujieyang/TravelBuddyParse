@@ -68,6 +68,7 @@ $(function(){
 			name = first + " " + last;
 			console.log("name: " + name);
 			console.log("email:" + email);
+			console.log("top dest: " + topDest);
 			this.$(".name").html(name).show();
 			this.$(".email").html(email).show();
 			this.$(".top-dest").html(topDest).show();
