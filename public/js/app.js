@@ -48,15 +48,17 @@ $(function(){
 		events: {
 			"click #logout": "logout",
 			"click #edit": "editProfile",
-			"click #match": "match"
+			"click #match": "gotoMatch"
 		},
 		el: ".content",
 		template: _.template($('#profile-template').html()),
 		initialize: function() {
+			_.bindAll(this, "logout", "editProfile", "gotoMatch");
 			this.render();
 		},
 		render: function() {
 			$(this.el).html(this.template);
+			this.delegateEvents();
 			var user = Parse.User.current();
 			var name, first, last, email, topDest;
 			first = user.get("firstName");
@@ -66,6 +68,7 @@ $(function(){
 			name = first + " " + last;
 			console.log("name: " + name);
 			console.log("email:" + email);
+			console.log("top dest: " + topDest);
 			this.$(".name").html(name).show();
 			this.$(".email").html(email).show();
 			this.$(".top-dest").html(topDest).show();
@@ -85,34 +88,36 @@ $(function(){
 				alert("There's an error logging out!");
 			}
 		},
-		match: function() {
-			new HomeView();
+		gotoMatch: function() {
+			new MatchView();
 			this.undelegateEvents();
 			delete this;
 		}
 	});
 
 	/* 
-	 * HomeView
-	 * The HomeView display a collection of matches
+	 * MatchView
+	 * The MatchView display a collection of matches
 	 * to the user. The user can click on any of the
 	 * record to see profiles of matched travlers.
 	 * He can also tab Profile on the Nav bar to go see
 	 * and edit his own profile.
 	 */
-	var HomeView = Parse.View.extend({
+	var MatchView = Parse.View.extend({
 		events: {
-			"click #profile": "profile"
+			"click #profile": "gotoProfile"
 		},
 		el: ".content",
 		template: _.template($('#home-view-template').html()),
 		initialize: function() {
+			_.bindAll(this, "gotoProfile");
 			this.render();
 		},
 		render: function() {
 			$(this.el).html(this.template);
+			this.delegateEvents();
 		},
-		profile: function() {
+		gotoProfile: function() {
 			new ProfileView();
 			this.undelegateEvents();
 			delete this;
@@ -171,6 +176,7 @@ $(function(){
 					console.log(error);
 				}
 			});
+			return false;
 		}
 	});
 
@@ -208,38 +214,13 @@ $(function(){
 
         error: function(user, error) {
           self.$(".login-form .error").html("Invalid username or password. Please try again.").show();
-          this.$(".login-form button").removeAttr("disabled");
+          self.$(".login-form button").removeAttr("disabled");
         }
       });
 
       this.$(".login-form button").attr("disabled", "disabled");
 
       return false;
-
-			/*
-			new ProfileView();
-			this.undelegateEvents();
-			delete this;
-			Parse.FacebookUtils.logIn("email", {
-  			success: function(user) {
-    			if (!user.existed()) {
-      			alert("User signed up and logged in through Facebook!");
-      			// Go to TopDestView
-    			} else {
-      			alert("User logged in through Facebook!");
-      			// Go to HomeView
-    			}
-    			console.log("Current user is: " + Parse.User.current());
-    			new ProfileView();
-          self.undelegateEvents();
-          delete self;
-  			},
-  			error: function(user, error) {
-    			alert("User cancelled the Facebook login or did not fully authorize.");
-  			}
-			});
-			return false;
-			*/
 		},
 		signup: function() {
   		var self = this;
@@ -255,7 +236,7 @@ $(function(){
 
         error: function(user, error) {
           self.$(".signup-form .error").html(error.message).show();
-          this.$(".signup-form button").removeAttr("disabled");
+          self.$(".signup-form button").removeAttr("disabled");
         }
       });
 
