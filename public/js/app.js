@@ -32,7 +32,6 @@ $(function(){
 	 * cancel button to return to his profile View.
 	 */
 	var EditProfileView = Parse.View.extend({
-		return;
 	});
 
 	/*
@@ -58,6 +57,10 @@ $(function(){
 			$(this.el).html(this.template);
 		},
 		logout: function() {
+			new LoginView();
+			this.undelegateEvents();
+			delete this;
+			/*
 			Parse.User.logOut();
 			if(!Parse.User.current()) {
 				new LogInView();
@@ -66,6 +69,7 @@ $(function(){
 			} else {
 				alert("This is a problem logging out!");
 			}
+			*/
 		}
 	});
 
@@ -78,7 +82,6 @@ $(function(){
 	 * and edit his own profile.
 	 */
 	var HomeView = Parse.View.extend({
-		return;
 	});
 
 	/*
@@ -88,7 +91,6 @@ $(function(){
 	 * match travlers based on this information.
 	 */
 	var TopDestView = Parse.View.extend({
-		return;
 	});
 
 	/*
@@ -109,6 +111,10 @@ $(function(){
 			$(this.el).html(this.template);
 		},
 		login: function() {
+			new ProfileView();
+			this.undelegateEvents();
+			delete this;
+			/*
 			Parse.FacebookUtils.logIn("email", {
   			success: function(user) {
     			if (!user.existed()) {
@@ -128,6 +134,7 @@ $(function(){
   			}
 			});
 			return false;
+			*/
 		}
 	});
 
@@ -137,11 +144,14 @@ $(function(){
 			this.render();
 		},
 		render: function() {
+			new LoginView();
+			/*
 			if (Parse.User.current()) {
 				new ProfileView();
 			} else {
 				new LoginView();
 			}
+			*/
 		}
 	});
 
