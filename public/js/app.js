@@ -88,7 +88,7 @@ $(function(){
 			}
 		},
 		gotoMatch: function() {
-			new HomeView();
+			new MatchView();
 			this.undelegateEvents();
 			delete this;
 		}
@@ -102,7 +102,7 @@ $(function(){
 	 * He can also tab Profile on the Nav bar to go see
 	 * and edit his own profile.
 	 */
-	var HomeView = Parse.View.extend({
+	var MatchView = Parse.View.extend({
 		events: {
 			"click #profile": "gotoProfile"
 		},
