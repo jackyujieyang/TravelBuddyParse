@@ -21,14 +21,10 @@
 <div id="fb-root"></div>
   <!-- App Interface -->
   <div class="container" id="app">
-  	<h1>Travel Buddy</h1>
   	<div class="content">
   	</div>
-  	<div id="credits">
-  		<p>Powered by <a href="https://www.parse.com">Parse</a> using the <a href="https://www.parse.com/docs/js_guide">JavaScript SDK</a>.<br/><br/>
-  		</p>
-  	</div>
-  </div> <!-- End of container -->
+  </div>
+</div> <!-- End of container -->
 
   <!-- <h2 class="cover-heading">Travel with others.</h2>
     <p class="lead">Connect and meet travelers from all around the world.</p>
@@ -38,8 +34,11 @@
 
 
   <!-- Templates -->
+  
+  <!-- Login Template -->
   <script type="text/template" id="login-template">
     <div class="inner cover">
+          <h1>Travel Buddy</h1>
           </br>
           </br>
           </br>
@@ -59,16 +58,46 @@
     </div>
   </script>
   
+
+  <!-- Profile Page Template -->
   <script type="text/template" id="profile-template">
-  </br>
-  </br>
-  </br>
-		<h2 class="cover-heading">This is your profile</p>
-		<p class="lead">You may click the button below to logout.</p>
-		<p>
-	    <button id="logout" type="button" class="btn btn-danger btn-lg btn-block">Logout</button>
-	  </p>
+  <div class="inner">
+      <button id="logout" type="button" class="btn btn-danger" style="float:left;">Logout</button>
+      <button id="logout" type="button" class="btn btn-default" style="float:right;">Edit</button>
+  </div>
+  <div class="middle" style="padding-top:7%;padding-bottom:10%">
+    <h1 class="cover-heading" id="name">Peter Parker</h1>
+    <img src="facebook-default-no-profile-pic.jpg" alt="facebook-default-no-profile-pic.jpg" class="img-circle">
+    <p id="email">Email: peterparker@spiderman.com</p>
+    <p id="topdest">Top Destination: New York </p>
+	</div>
+
+  <div class="navbar-fixed-bottom container-fluid" style="padding-bottom:2%">
+    <button type="button" class="btn btn-lg btn-default" id="match">Match</button>
+    <button type="button" class="btn btn-lg btn-default">Profile</button>
+  </div>
 	</script>
+
+
+  <!-- Home View (Matches) Template -->
+  <script type="text/template" id="home-view-template">
+    <div class="row">
+      <div class="col-md-4">
+        <img src="facebook-default-no-profile-pic.jpg" alt="facebook-default-no-profile-pic.jpg" class="img-thumbnail">
+      </div>
+      <div class="col-md-8">
+        <p style="font:bold;">Tom Cruise</p>
+        <p>Top Destination: Hawaii</p>
+      </div>
+    </div>
+
+
+
+  <div class="navbar-fixed-bottom container-fluid" style="padding-bottom:2%">
+    <button type="button" class="btn btn-lg btn-default">Match</button>
+    <button type="button" class="btn btn-lg btn-default">Profile</button>
+  </div>
+  </script>
 
 </body>
 </html>
