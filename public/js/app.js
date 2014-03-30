@@ -46,7 +46,8 @@ $(function(){
 	 */
 	var ProfileView = Parse.View.extend({
 		events: {
-			"click #logout": "logout"
+			"click #logout": "logout",
+			"click #edit": "editProfile"
 		},
 		el: ".content",
 		template: _.template($('#profile-template').html()),
@@ -55,6 +56,23 @@ $(function(){
 		},
 		render: function() {
 			$(this.el).html(this.template);
+			var user = Parse.User.current();
+			var name, first, last, email, topDest;
+			first = user.get("firstName");
+			last = user.get("lastName");
+			email = user.getEmail();
+			topDest = user.get("topDest");
+			name = first + " " + last;
+			console.log("name: " + name);
+			console.log("email:" + email);
+			this.$(".name").html(name).show();
+			this.$(".email").html(email).show();
+			this.$(".top-dest").html(topDest).show();
+		},
+		editProfile: function() {
+			new OldInfoView();
+			this.undelegateEvents();
+			delete this;
 		},
 		logout: function() {
 			Parse.User.logOut();
@@ -65,17 +83,6 @@ $(function(){
 			} else {
 				alert("There's an error logging out!");
 			}
-
-			/*
-			Parse.User.logOut();
-			if(!Parse.User.current()) {
-				new LogInView();
-				self.undelegateEvents();
-				delete self;
-			} else {
-				alert("This is a problem logging out!");
-			}
-			*/
 		}
 	});
 
@@ -138,7 +145,7 @@ $(function(){
 					delete self;
 				},
 				error: function(user, error) {
-					alert(error);
+					alert("Error: " + error.code + error.message);
 					console.log(error);
 				}
 			});
