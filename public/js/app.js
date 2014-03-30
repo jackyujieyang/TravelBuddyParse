@@ -126,18 +126,10 @@ $(function(){
 			var topDest = this.$("#top-dest").val();
 
 			var user = Parse.User.current();
-			user.set({
-				firstName: firstName,
-				lastName: lastName,
-				email: email,
-				topDest: topDest
-			});
-			/*
 			user.set("firstName", firstName);
 			user.set("lastName", lastName);
 			user.setEmail(email);
 			user.set("topDest", topDest);
-			*/
 			user.save(null, {
 				success: function(user) {
 					alert("successfully saved user info.");
