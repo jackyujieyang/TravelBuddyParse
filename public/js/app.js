@@ -57,9 +57,15 @@ $(function(){
 			$(this.el).html(this.template);
 		},
 		logout: function() {
-			new LoginView();
-			this.undelegateEvents();
-			delete this;
+			Parse.User.logOut();
+			if (!Parse.User.current()) {
+				new LoginView();
+				this.undelegateEvents();
+				delete this;
+			} else {
+				alert("There's an error logging out!");
+			}
+
 			/*
 			Parse.User.logOut();
 			if(!Parse.User.current()) {
@@ -93,6 +99,51 @@ $(function(){
 	var TopDestView = Parse.View.extend({
 	});
 
+
+	/*
+	 * oldInfoView
+	 * For testing only. Ask user to complete his information
+	 */
+	var OldInfoView = Parse.View.extend({
+		events: {
+			"submit form.enterinfo-form": "submit"
+		},
+		el: ".content",
+		template: _.template($('#oldInfo-template').html()),
+		initialize: function() {
+			_.bindAll(this, "submit");
+			this.render();
+		},
+		render: function() {
+			$(this.el).html(this.template);
+			this.delegateEvents();
+		},
+		submit: function(e) {
+			var self = this;
+			var firstName = this.$("#first-name").val();
+			var lastName = this.$("#last-name").val();
+			var email = this.$("#email").val();
+			var topDest = this.$("#top-dest").val();
+
+			var user = Parse.User.current();
+			user.set("firstName", firstName);
+			user.set("lastName", lastName);
+			user.set("email", email);
+			user.set("topDest", topDest);
+			user.signUp(null, {
+				success: function(user) {
+					console.log("successfully saved user info.");
+					new ProfileView();
+					self.undelegateEvents();
+					delete self;
+				},
+				error: function(user, error) {
+					console.log(error);
+				}
+			});
+		}
+	});
+
 	/*
 	 * Login View
 	 * If user is not currently signed in, he comes to this
@@ -100,21 +151,45 @@ $(function(){
 	 */
 	var LoginView = Parse.View.extend({
 		events: {
-			"click #login": "login"
+			"submit form.login-form": "login",
+			"submit form.signup-form": "signup"
 		},
 		el: ".content",
-		template: _.template($('#login-template').html()),
+		template: _.template($('#oldLogin-template').html()),
 		initialize: function() {
+			_.bindAll(this, "login", "signup");
 			this.render();
 		},
 		render: function() {
 			$(this.el).html(this.template);
+			this.delegateEvents();
 		},
-		login: function() {
+		login: function(e) {
+			var self = this;
+      var username = this.$("#login-username").val();
+      var password = this.$("#login-password").val();
+      
+      Parse.User.logIn(username, password, {
+        success: function(user) {
+          new ProfileView();
+          self.undelegateEvents();
+          delete self;
+        },
+
+        error: function(user, error) {
+          self.$(".login-form .error").html("Invalid username or password. Please try again.").show();
+          this.$(".login-form button").removeAttr("disabled");
+        }
+      });
+
+      this.$(".login-form button").attr("disabled", "disabled");
+
+      return false;
+
+			/*
 			new ProfileView();
 			this.undelegateEvents();
 			delete this;
-			/*
 			Parse.FacebookUtils.logIn("email", {
   			success: function(user) {
     			if (!user.existed()) {
@@ -135,6 +210,28 @@ $(function(){
 			});
 			return false;
 			*/
+		},
+		signup: function() {
+  		var self = this;
+      var username = this.$("#signup-username").val();
+      var password = this.$("#signup-password").val();
+      
+      Parse.User.signUp(username, password, { ACL: new Parse.ACL() }, {
+        success: function(user) {
+          new OldInfoView();
+          self.undelegateEvents();
+          delete self;
+        },
+
+        error: function(user, error) {
+          self.$(".signup-form .error").html(error.message).show();
+          this.$(".signup-form button").removeAttr("disabled");
+        }
+      });
+
+      this.$(".signup-form button").attr("disabled", "disabled");
+
+      return false;
 		}
 	});
 
