@@ -1,4 +1,4 @@
-$(function(){
+$(function() {
 	Parse.$ = jQuery;
 
 	//Initialize Parse
@@ -6,41 +6,45 @@ $(function(){
 
 	//Initialize Facebook
 	window.fbAsyncInit = function() {
-	  // init the FB JS SDK
-	  Parse.FacebookUtils.init({
-	    appId      : '772451966098433', // Facebook App ID
-	    channelUrl : '//travelbuddydev.parseapp.com/channel.html', // Channel File
-	    //status     : true, // check login status
-	    cookie     : true, // enable cookies to allow Parse to access the session
-	    xfbml      : true  // parse XFBML
-	  });
+		// init the FB JS SDK
+		Parse.FacebookUtils.init({
+			appId: '772451966098433', // Facebook App ID
+			channelUrl: '//travelbuddydev.parseapp.com/channel.html', // Channel File
+			//status     : true, // check login status
+			cookie: true, // enable cookies to allow Parse to access the session
+			xfbml: true // parse XFBML
+		});
 	};
 
 	//Async load FB JS SDK
-	(function(d, debug){
-	  var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-	  if (d.getElementById(id)) {return;}
-	  js = d.createElement('script'); js.id = id; js.async = true;
-	  js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
-	  ref.parentNode.insertBefore(js, ref);
+	(function(d, debug) {
+		var js, id = 'facebook-jssdk',
+			ref = d.getElementsByTagName('script')[0];
+		if (d.getElementById(id)) {
+			return;
+		}
+		js = d.createElement('script');
+		js.id = id;
+		js.async = true;
+		js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+		ref.parentNode.insertBefore(js, ref);
 	}(document, /*debug*/ false));
 
 	/* 
 	 * EditProfileView
 	 * The user can change his name, email or top destination
-	 * in the form, and submit the form. Or he can clikc the 
+	 * in the form, and submit the form. Or he can clikc the
 	 * cancel button to return to his profile View.
 	 */
-	var EditProfileView = Parse.View.extend({
-	});
+	var EditProfileView = Parse.View.extend({});
 
 	/*
 	 * ProfileView
 	 * The user can see his prfile picture, name, email, and
-	 * top destination. He can click edit button to edit go 
+	 * top destination. He can click edit button to edit go
 	 * to the page where he can edit his basic information.
 	 * He can click on the edit button below his profile
-	 * picture to upload a new profile picture. Or he can 
+	 * picture to upload a new profile picture. Or he can
 	 * click on the logout button to logout and return to
 	 * the LoginView.
 	 */
@@ -130,8 +134,7 @@ $(function(){
 	 * page to enter his top destination. The system will
 	 * match travlers based on this information.
 	 */
-	var TopDestView = Parse.View.extend({
-	});
+	var TopDestView = Parse.View.extend({});
 
 
 	/*
@@ -202,47 +205,49 @@ $(function(){
 		},
 		login: function(e) {
 			var self = this;
-      var username = this.$("#login-username").val();
-      var password = this.$("#login-password").val();
-      
-      Parse.User.logIn(username, password, {
-        success: function(user) {
-          new ProfileView();
-          self.undelegateEvents();
-          delete self;
-        },
+			var username = this.$("#login-username").val();
+			var password = this.$("#login-password").val();
 
-        error: function(user, error) {
-          self.$(".login-form .error").html("Invalid username or password. Please try again.").show();
-          self.$(".login-form button").removeAttr("disabled");
-        }
-      });
+			Parse.User.logIn(username, password, {
+				success: function(user) {
+					new ProfileView();
+					self.undelegateEvents();
+					delete self;
+				},
 
-      this.$(".login-form button").attr("disabled", "disabled");
+				error: function(user, error) {
+					self.$(".login-form .error").html("Invalid username or password. Please try again.").show();
+					self.$(".login-form button").removeAttr("disabled");
+				}
+			});
 
-      return false;
+			this.$(".login-form button").attr("disabled", "disabled");
+
+			return false;
 		},
 		signup: function() {
-  		var self = this;
-      var username = this.$("#signup-username").val();
-      var password = this.$("#signup-password").val();
-      
-      Parse.User.signUp(username, password, { ACL: new Parse.ACL() }, {
-        success: function(user) {
-          new OldInfoView();
-          self.undelegateEvents();
-          delete self;
-        },
+			var self = this;
+			var username = this.$("#signup-username").val();
+			var password = this.$("#signup-password").val();
 
-        error: function(user, error) {
-          self.$(".signup-form .error").html(error.message).show();
-          self.$(".signup-form button").removeAttr("disabled");
-        }
-      });
+			Parse.User.signUp(username, password, {
+				ACL: new Parse.ACL()
+			}, {
+				success: function(user) {
+					new OldInfoView();
+					self.undelegateEvents();
+					delete self;
+				},
 
-      this.$(".signup-form button").attr("disabled", "disabled");
+				error: function(user, error) {
+					self.$(".signup-form .error").html(error.message).show();
+					self.$(".signup-form button").removeAttr("disabled");
+				}
+			});
 
-      return false;
+			this.$(".signup-form button").attr("disabled", "disabled");
+
+			return false;
 		}
 	});
 
