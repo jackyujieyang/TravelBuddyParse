@@ -162,7 +162,7 @@ $(function() {
 			var lastName = this.$("#last-name").val();
 			var email = this.$("#email").val();
 			var topDest = this.$("#top-dest").val();
-			var pic = this.$("#picture").val();
+			var pic = this.$("#picture");
 			var user = Parse.User.current();
 			user.set("firstName", firstName);
 			user.set("lastName", lastName);
