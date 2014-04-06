@@ -1,3 +1,4 @@
+// Test comment
 $(function() {
 	Parse.$ = jQuery;
 
