@@ -164,7 +164,7 @@ $(function() {
 			var topDest = this.$("#top-dest").val();
 			///////////////////////////test
 			var picture = this.$("#picture");
-			alert(picture);
+			alert("picture");
 			var user = Parse.User.current();
 			user.set("firstName", firstName);
 			user.set("lastName", lastName);
