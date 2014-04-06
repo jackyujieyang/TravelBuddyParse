@@ -1,4 +1,3 @@
-// Test comment
 $(function() {
 	Parse.$ = jQuery;
 
@@ -259,6 +258,10 @@ $(function() {
 		}
 	});
 
+	function helloJS() {
+    	return "GOOD";
+	}
+	
 	var AppView = Parse.View.extend({
 		el: $("#app"),
 		initialize: function() {
