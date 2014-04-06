@@ -161,12 +161,15 @@ $(function() {
 			var lastName = this.$("#last-name").val();
 			var email = this.$("#email").val();
 			var topDest = this.$("#top-dest").val();
-
+			///////////////////////////test
+			var picture = this.$("#picture");
+			var name = "photo.png"
 			var user = Parse.User.current();
 			user.set("firstName", firstName);
 			user.set("lastName", lastName);
 			user.setEmail(email);
 			user.set("topDest", topDest);
+			user.set("picture",picture);
 			user.save(null, {
 				success: function(user) {
 					alert("successfully saved user info.");
