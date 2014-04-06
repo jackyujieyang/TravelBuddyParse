@@ -1,3 +1,7 @@
+	function helloJS() {
+    	return "GOOD";
+	}
+
 $(function() {
 	Parse.$ = jQuery;
 
@@ -26,7 +30,7 @@ $(function() {
 		js = d.createElement('script');
 		js.id = id;
 		js.async = true;
-		js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+		js.src = "http://connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
 		ref.parentNode.insertBefore(js, ref);
 	}(document, /*debug*/ false));
 
@@ -161,7 +165,6 @@ $(function() {
 			var lastName = this.$("#last-name").val();
 			var email = this.$("#email").val();
 			var topDest = this.$("#top-dest").val();
-			///////////////////////////test
 			var picture = this.$("#picture");
 			var name = "photo.png"
 			var user = Parse.User.current();
@@ -253,10 +256,6 @@ $(function() {
 			return false;
 		}
 	});
-
-	function helloJS() {
-    	return "GOOD";
-	}
 	
 	var AppView = Parse.View.extend({
 		el: $("#app"),
