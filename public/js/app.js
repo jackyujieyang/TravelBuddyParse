@@ -162,18 +162,25 @@ $(function() {
 			var email = this.$("#email").val();
 			var topDest = this.$("#top-dest").val();
 			
-			///////////////////////////test
-			var pic = this.$("#picture");
-			var name = "photo.png"
-			var picture = new Parse.File(name, pic);
-
 			var user = Parse.User.current();
 			user.set("firstName", firstName);
 			user.set("lastName", lastName);
 			user.setEmail(email);
 			user.set("topDest", topDest);
 			user.set("picture",picture);
-			
+
+			///////////////////////////test
+			var fileUploadControl = this.$("#picture")[0];
+			if (fileUploadControl.files.length > 0){
+				var file = fileUploadControl.files[0];
+				var name = "photo.png";
+				var picture = new Parse.File(name, pic);
+				picture.save().then(function(picture){
+					var url = picture.url();
+					user.set("image",url);
+				})
+			}
+						
 			user.save(null, {
 				success: function(user) {
 					alert("successfully saved user info.");
