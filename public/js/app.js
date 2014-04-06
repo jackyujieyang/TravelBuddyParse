@@ -176,14 +176,19 @@ $(function() {
 			user.set("picture",picture);
 
 			///////////////////////////test
-			var fileUploadControl = this.$("#picture")[0];
+			var fileUploadControl = $("#picture")[0];
 			if (fileUploadControl.files.length > 0){
 				var file = fileUploadControl.files[0];
 				var name = "photo.png";
-				var picture = new Parse.File(name, pic);
-				picture.save().then(function(picture){
+				var picture = new Parse.File(name, file);
+				/*picture.save().then(function(picture){
 					var url = picture.url();
 					user.set("image",url);
+				});*/
+				picture.save().then(function(){
+					alert("picture saved!!!!!!");
+				}, function(error){
+					alert("there is error!");
 				});
 			};
 
