@@ -178,9 +178,9 @@ $(function() {
 				picture.save().then(function(picture){
 					var url = picture.url();
 					user.set("image",url);
-				})
-			}
-						
+				});
+			};
+
 			user.save(null, {
 				success: function(user) {
 					alert("successfully saved user info.");
