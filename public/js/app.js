@@ -204,6 +204,61 @@ $(function() {
 			this.render();
 		},
 		render: function() {
+			var User = Parse.Object.extend("User");
+        	var query = new Parse.Query(User);
+
+        	var current = Parse.User.current();
+        	var dest = current.get("topDest");
+        	query.equalTo("topDest", dest);
+
+        	query.limit(100).find({
+        		success: function(result) {
+        			console.log("success block reached for matchView");
+        			$('#matches div').empty(); // clear div for new matches, if any.
+        			for (var x in result) {
+        				var match = result[x];
+        				//if (match.attributes.email != current.getEmail()) {
+        					var template = $('#home-view-template');
+							var container = template.context.getElementById("matches");
+        					var row = document.createElement("div");
+        					row.class = "row";
+        					var imageDiv = document.createElement("div");
+        					imageDiv.class = "col-xs-4";
+        					var image = document.createElement("img");
+        					var matchImg = match.get("picture");
+        					image.src = matchImg.url;
+        					image.alt = matchImg.url;
+        					image.class = "img-thumbnail";
+        					imageDiv.appendChild(image);
+        					
+        					var infoDiv = document.createElement("div");
+        					infoDiv.class = "col-xs-8";
+        					
+        					var nameText = document.createElement("p");
+        					nameText.style.font="bold";
+        					var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
+        					nameText.appendChild(name);
+        					
+        					var destText = document.createElement("p");
+        					var destination = document.createTextNode(match.attributes.topDest);
+        					destText.appendChild(destination);
+
+        					infoDiv.appendChild(nameText);
+        					infoDiv.appendChild(destText);
+
+        					row.appendChild(imageDiv);
+        					row.appendChild(infoDiv);
+
+        					container.appendChild(row);
+        				//}
+        			}
+
+        		},
+        		error: function(error) {
+        			console.log(error);
+        		}
+        	});
+
 			$(this.el).html(this.template);
 			this.delegateEvents();
 		},

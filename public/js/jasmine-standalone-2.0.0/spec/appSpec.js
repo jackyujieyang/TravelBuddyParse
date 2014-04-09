@@ -1,18 +1,29 @@
 describe("LoginView", function() {
     it("Testing LoginView", function() {
-    	Parse.initialize("ygllhC3rTkJ6tXIVmYSjeoyFX5f3qzgt6l1zHko6", 
-    		"mnkxvrJwTcSkgxm492Aa41LoUlLuoKavX6vq403K");
+        Parse.initialize("ygllhC3rTkJ6tXIVmYSjeoyFX5f3qzgt6l1zHko6", "mnkxvrJwTcSkgxm492Aa41LoUlLuoKavX6vq403K");
         var User = Parse.Object.extend("User");
-        //var user = new User();
         var query = new Parse.Query(User);
-        var obj = null;
-        query.get("fBO2BtcxZg", { 
-        	success: function(user) { 
-        			obj = user;
-        			alert("success block reached");
+
+        Parse.User.logIn("alex", "test", {
+				success: function(user) {
+					console.log("login success");
+				},
+
+				error: function(user, error) {
+					console.log("login error");
+				}
+			});
+
+
+
+        query.matches("username","[A-Za-z]*").find({
+        //query.equalTo("username","jackyujieyang").find({ 
+        	success: function(results) { 
+        			var obj = Parse.User.current();
+        			console.log("success block reached");
         	},
-        	error: function(object, error){
-        		alert(error);
+        	error: function(error){
+        		console.log(error);
         	}
         });
         expect(true);
