@@ -75,10 +75,18 @@ $(function() {
 			//var name = "photo.png"
 			
 			var user = Parse.User.current();
-			user.set("firstName", firstName);
-			user.set("lastName", lastName);
-			user.setEmail(email);
-			user.set("topDest", topDest);
+			if (firstName != "") {
+				user.set("firstName", firstName);
+			}
+			if (lastName != "") {
+				user.set("lastName", lastName);
+			}
+			if (email != "") {
+				user.setEmail(email);
+			}
+			if (topDest != "") {
+				user.set("topDest", topDest);
+			}
 			
 			///////////////////////////test
 			var fileUploadControl = $("#picture")[0];
@@ -100,7 +108,7 @@ $(function() {
 
 			user.save(null, {
 				success: function(user) {
-					alert("successfully saved user info.");
+					console.log("successfully saved user info.");
 					new ProfileView();
 					self.undelegateEvents();
 					delete self;
