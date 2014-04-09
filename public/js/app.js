@@ -40,7 +40,79 @@ $(function() {
 	 * in the form, and submit the form. Or he can clikc the
 	 * cancel button to return to his profile View.
 	 */
-	var EditProfileView = Parse.View.extend({});
+	var EditProfileView = Parse.View.extend({
+		events: {
+			"submit form.enterinfo-form": "submit",
+			"click #back": "back"
+		},
+		el: ".content",
+		template: _.template($('#editProfile-template').html()),
+		initialize: function() {
+			_.bindAll(this, "submit", "back");
+			this.render();
+		},
+		render: function() {
+			$(this.el).html(this.template);
+			var user = Parse.User.current();
+			$("#first-name").attr("placeholder", user.get("firstName"));
+			$("#last-name").attr("placeholder", user.get("lastName"));
+			$("#email").attr("placeholder", user.get("email"));
+			$("#top-dest").attr("placeholder", user.get("topDest"));
+			this.delegateEvents();
+		},
+		back: function() {
+			new ProfileView();
+			this.undelegateEvents();
+			delete self;
+		},
+		submit: function(e) {
+			var self = this;
+			var firstName = this.$("#first-name").val();
+			var lastName = this.$("#last-name").val();
+			var email = this.$("#email").val();
+			var topDest = this.$("#top-dest").val();
+			//var picture = this.$("#picture");
+			//var name = "photo.png"
+			
+			var user = Parse.User.current();
+			user.set("firstName", firstName);
+			user.set("lastName", lastName);
+			user.setEmail(email);
+			user.set("topDest", topDest);
+			
+			///////////////////////////test
+			var fileUploadControl = $("#picture")[0];
+			if (fileUploadControl.files.length > 0){
+				var file = fileUploadControl.files[0];
+				var name = "photo.png";
+				var picture = new Parse.File(name, file);
+				user.set("picture",picture);
+				/*picture.save().then(function(picture){
+					var url = picture.url();
+					user.set("image",url);
+				});
+				picture.save().then(function(){
+					alert("picture saved!!!!!!");
+				}, function(error){
+					alert("there is error!");
+				});*/
+			};
+
+			user.save(null, {
+				success: function(user) {
+					alert("successfully saved user info.");
+					new ProfileView();
+					self.undelegateEvents();
+					delete self;
+				},
+				error: function(user, error) {
+					alert("Error: " + error.code + error.message);
+					console.log(error);
+				}
+			});
+			return false;
+		}
+	});
 
 	/*
 	 * ProfileView
@@ -68,12 +140,14 @@ $(function() {
 			$(this.el).html(this.template);
 			this.delegateEvents();
 			var user = Parse.User.current();
-			var name, first, last, email, topDest;
+			var name, first, last, email, topDest, profilePhoto;
 			first = user.get("firstName");
 			last = user.get("lastName");
 			email = user.getEmail();
 			topDest = user.get("topDest");
 			name = first + " " + last;
+			profilePhoto = user.get("picture");
+			$("#profileImg")[0].src = profilePhoto.url();
 			console.log("name: " + name);
 			console.log("email:" + email);
 			console.log("top dest: " + topDest);
@@ -82,7 +156,7 @@ $(function() {
 			this.$(".top-dest").html(topDest).show();
 		},
 		editProfile: function() {
-			new OldInfoView();
+			new EditProfileView();
 			this.undelegateEvents();
 			delete this;
 		},
