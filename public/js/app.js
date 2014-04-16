@@ -273,6 +273,22 @@ $(function() {
 		}
 	});
 
+	var OtherProfileView = Parse.View.extend({
+		events: {
+			
+		},
+		el: ".content",
+		template: _.template($('#other-profile-template').html()),
+		initialize: function() {
+			_.bindAll(this, "gotoOtherProfile");
+			this.render();
+		},
+		render: function() {
+			$(this.el).html(this.template);
+			this.delegateEvents();
+		}
+	})
+
 	/* 
 	 * MatchView
 	 * The MatchView display a collection of matches
@@ -284,6 +300,7 @@ $(function() {
 	var MatchView = Parse.View.extend({
 		events: {
 			"click #profile": "gotoProfile"
+			"click #otherprofile": "gotoOtherProfile"
 		},
 		el: ".content",
 		template: _.template($('#home-view-template').html()),
@@ -297,9 +314,7 @@ $(function() {
 
         	var current = Parse.User.current();
         	var dest = current.get("topDest");
-        	query.equalTo("topDest", dest);
-
-        	query.limit(100).find({
+        	query.equalTo("topDest", "Victory").find({
         		success: function(result) {
         			console.log("success block reached for matchView");
         			$('#matches div').empty(); // clear div for new matches, if any.
@@ -314,6 +329,7 @@ $(function() {
         					imageDiv.class = "col-xs-4";
         					var image = document.createElement("img");
         					var matchImg = match.get("picture");
+        					image.id = "otherprofile";
         					image.src = matchImg.url;
         					image.alt = matchImg.url;
         					image.class = "img-thumbnail";
@@ -352,6 +368,11 @@ $(function() {
 		},
 		gotoProfile: function() {
 			new ProfileView();
+			this.undelegateEvents();
+			delete this;
+		},
+		gotoOtherProfile: function {
+			new OtherProfileView();
 			this.undelegateEvents();
 			delete this;
 		}
