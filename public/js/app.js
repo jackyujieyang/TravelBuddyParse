@@ -108,7 +108,7 @@ $(function() {
 
 			user.save(null, {
 				success: function(user) {
-					console.log("successfully saved user info.");
+					//console.log("successfully saved user info.");
 					new ProfileView();
 					self.undelegateEvents();
 					delete self;
@@ -121,6 +121,20 @@ $(function() {
 			return false;
 		}
 	});
+
+	/*
+	 * getLocation
+	 * Get current location, and save it to the cloud
+	 */
+	var getLocation = function(callback) {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(location) {
+				callback(new Parse.GeoPoint({latitude: location.coords.latitude, longitude: location.coords.longitude}));
+			});
+		} else {
+			throw new Error("Your browser doesn't support geolocation");
+		}
+	};
 
 	/*
 	 * ProfileView
@@ -162,6 +176,17 @@ $(function() {
 			this.$(".name").html(name).show();
 			this.$(".email").html(email).show();
 			this.$(".top-dest").html(topDest).show();
+			getLocation(function(point) {
+				user.set("location", point);
+				user.save(null, {
+					success: function(user) {
+						console.log("location updated successfully");
+					},
+					error: function(user, error) {
+						console.log("error: " + error.code + error.meesage);
+					}
+				});
+			});
 		},
 		editProfile: function() {
 			new EditProfileView();
