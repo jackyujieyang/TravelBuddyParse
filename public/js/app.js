@@ -316,8 +316,6 @@ $(function() {
 			var lastName = this.$("#last-name").val();
 			var email = this.$("#email").val();
 			var topDest = this.$("#top-dest").val();
-			//var picture = this.$("#picture");
-			//var name = "photo.png"
 			
 			var user = Parse.User.current();
 			user.set("firstName", firstName);
@@ -332,20 +330,11 @@ $(function() {
 				var name = "photo.png";
 				var picture = new Parse.File(name, file);
 				user.set("picture",picture);
-				/*picture.save().then(function(picture){
-					var url = picture.url();
-					user.set("image",url);
-				});
-				picture.save().then(function(){
-					alert("picture saved!!!!!!");
-				}, function(error){
-					alert("there is error!");
-				});*/
 			};
 
 			user.save(null, {
 				success: function(user) {
-					alert("successfully saved user info.");
+					//alert("successfully saved user info.");
 					new ProfileView();
 					self.undelegateEvents();
 					delete self;
