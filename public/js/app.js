@@ -223,9 +223,7 @@ $(function() {
 
         	var current = Parse.User.current();
         	var dest = current.get("topDest");
-        	query.equalTo("topDest", dest);
-
-        	query.limit(100).find({
+        	query.equalTo("topDest", dest).find({
         		success: function(result) {
         			console.log("success block reached for matchView");
         			$('#matches div').empty(); // clear div for new matches, if any.
