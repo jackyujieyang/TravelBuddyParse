@@ -213,7 +213,7 @@ $(function() {
 			$(this.el).html(this.template);
 			this.delegateEvents();
 		}
-	})
+	});
 
 	/* 
 	 * MatchView
