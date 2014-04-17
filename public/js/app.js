@@ -274,13 +274,10 @@ $(function() {
 	});
 
 	var OtherProfileView = Parse.View.extend({
-		events: {
-			
-		},
 		el: ".content",
 		template: _.template($('#other-profile-template').html()),
 		initialize: function() {
-			_.bindAll(this, "gotoOtherProfile");
+			//_.bindAll(this, "gotoOtherProfile");
 			this.render();
 		},
 		render: function() {
@@ -299,7 +296,7 @@ $(function() {
 	 */
 	var MatchView = Parse.View.extend({
 		events: {
-			"click #profile": "gotoProfile"
+			"click #profile": "gotoProfile",
 			"click #otherprofile": "gotoOtherProfile"
 		},
 		el: ".content",
@@ -314,10 +311,10 @@ $(function() {
 
         	var current = Parse.User.current();
         	var dest = current.get("topDest");
-        	query.equalTo("topDest", "Victory").find({
+        	query.equalTo("topDest", dest).find({
         		success: function(result) {
         			console.log("success block reached for matchView");
-        			$('#matches div').empty(); // clear div for new matches, if any.
+        			//$('#matches div').empty(); // clear div for new matches, if any.
         			for (var x in result) {
         				var match = result[x];
         				//if (match.attributes.email != current.getEmail()) {
@@ -326,25 +323,32 @@ $(function() {
         					var row = document.createElement("div");
         					row.class = "row";
         					var imageDiv = document.createElement("div");
+        					imageDiv.style.display="inline-block";
         					imageDiv.class = "col-xs-4";
         					var image = document.createElement("img");
-        					var matchImg = match.get("picture");
+        					var matchImg = match.attributes.picture._url;
         					image.id = "otherprofile";
-        					image.src = matchImg.url;
-        					image.alt = matchImg.url;
+        					image.src = matchImg;
+        					image.alt = matchImg;
+        					image.height = 100;
+        					image.width = 100;
         					image.class = "img-thumbnail";
         					imageDiv.appendChild(image);
         					
         					var infoDiv = document.createElement("div");
+        					infoDiv.style.display="inline-block";
+        					infoDiv.style.padding="1%";
         					infoDiv.class = "col-xs-8";
         					
         					var nameText = document.createElement("p");
         					nameText.style.font="bold";
+        					nameText.id = "otherprofile";
         					var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
         					nameText.appendChild(name);
         					
         					var destText = document.createElement("p");
-        					var destination = document.createTextNode(match.attributes.topDest);
+        					destText.id = "otherprofile";
+        					var destination = document.createTextNode("Top destination: " + match.attributes.topDest);
         					destText.appendChild(destination);
 
         					infoDiv.appendChild(nameText);
@@ -371,7 +375,7 @@ $(function() {
 			this.undelegateEvents();
 			delete this;
 		},
-		gotoOtherProfile: function {
+		gotoOtherProfile: function() {
 			new OtherProfileView();
 			this.undelegateEvents();
 			delete this;
