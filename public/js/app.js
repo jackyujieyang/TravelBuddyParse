@@ -408,25 +408,30 @@ $(function() {
 		submit: function(e) {
 			var self = this;
 			var topDest = this.$("#top-dest").val();
-			
-			var parentFbId = Parse.User.current().get("facebookId");
-			var TopDest = Parse.Object.extend("TopDestination");
-			var myTopDest = new TopDest();
-			myTopDest.set("topDest", topDest);
-			myTopDest.set("parentFbId", parentFbId);
-			myTopDest.save(null, {
-				success: function(myTopDest) {
-					console.log("top destination info successfully saved");
-					new ProfileView();
-					self.undelegateEvents();
-					delete self;
-				},
-				error: function(myTopDest, error) {
-					alert("Error: " + error.code + error.message);
-					console.log(error);
-				}
-			});
-			return false;
+			if (!topDest) {
+				new ProfileView();
+				self.undelegateEvents();
+				delete self;
+			} else {
+				var parentFbId = Parse.User.current().get("facebookId");
+				var TopDest = Parse.Object.extend("TopDestination");
+				var myTopDest = new TopDest();
+				myTopDest.set("topDest", topDest);
+				myTopDest.set("parentFbId", parentFbId);
+				myTopDest.save(null, {
+					success: function(myTopDest) {
+						console.log("top destination info successfully saved");
+						new ProfileView();
+						self.undelegateEvents();
+						delete self;
+					},
+					error: function(myTopDest, error) {
+						alert("Error: " + error.code + error.message);
+						console.log(error);
+					}
+				});
+				return false;
+			}
 		}
 	});
 
