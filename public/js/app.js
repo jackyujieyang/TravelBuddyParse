@@ -2,6 +2,70 @@
     	return "GOOD";
 	}
 
+	var getGoogleLocation = function(callback) {
+		var user = Parse.User.current();
+		if (user) {
+			var location = user.get("location");
+			console.log(location);
+			callback(new google.maps.LatLng(location._latitude, location._longitude));
+		} else {
+			throw new Error("Your browser doesn't support geolocation");
+		}
+	};
+	function toggleBounce() {
+	  if (marker.getAnimation() != null) {
+	    marker.setAnimation(null);
+	  } else {
+	    marker.setAnimation(google.maps.Animation.BOUNCE);
+	  }
+	}
+
+	function loadScript() {
+		console.log("Loading Google map JS SDK...");
+	  var script = document.createElement('script');
+	  script.type = 'text/javascript';
+	  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBB56byTSi_4iHy_hqH8zN3FQPgb2pm7UQ&sensor=false&' +
+	      'callback=initialize';
+	  document.body.appendChild(script);
+	}
+
+	function initialize() {
+		getGoogleLocation(function(loc) {
+			myLocation = loc;
+			console.log(loc);
+		  var mapOptions = {
+		    zoom: 10,
+		    center: myLocation
+		  };
+
+		  map = new google.maps.Map(document.getElementById('map-canvas'),
+		      mapOptions);
+
+		  console.log("I'm initializing google maps");
+
+		  marker = new google.maps.Marker({
+	      position: myLocation,
+	      map: map,
+	      draggable: true,
+	      animation: google.maps.Animation.DROP,
+	      title: 'Hello World!'
+	  	});
+
+		  console.log("marker succesfully created!");
+
+	  	google.maps.event.addListener(marker, 'click', toggleBounce);
+		});
+	}
+
+	function loadScript() {
+		console.log("Loading Google map JS SDK...");
+	  var script = document.createElement('script');
+	  script.type = 'text/javascript';
+	  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBB56byTSi_4iHy_hqH8zN3FQPgb2pm7UQ&sensor=false&' +
+	      'callback=initialize';
+	  document.body.appendChild(script);
+	}
+
 $(function() {
 	Parse.$ = jQuery;
 
@@ -111,7 +175,15 @@ $(function() {
 		}
 	});
 
+	/*********************
+	*
+	*    MapView
+	*
+	**********************/
 	var MapView = Parse.View.extend({
+		events: {
+			"click #back": "back"
+		},
 		el: ".content",
 		template: _.template($('#map-template').html()),
 		initialize: function() {
@@ -119,63 +191,13 @@ $(function() {
 		},
 		render: function() {
 			$(this.el).html(this.template);
-			loadScript;
-
-			var myLocation;
-			var marker;
-			var map;
-			function initialize() {
-
-				getGoogleLocation(function(loc) {
-					myLocation = loc;
-					//var myLocation = new google.maps.LatLng(39.9051782, -75.3541891);
-				  var mapOptions = {
-				    zoom: 10,
-				    center: myLocation
-				  };
-
-				  map = new google.maps.Map(document.getElementById('map-canvas'),
-				      mapOptions);
-
-				  marker = new google.maps.Marker({
-			      position: myLocation,
-			      map: map,
-			      draggable: true,
-			      animation: google.maps.Animation.DROP,
-			      title: 'Hello World!'
-			  	});
-			  	google.maps.event.addListener(marker, 'click', toggleBounce);
-				})
-			}
-
-			function toggleBounce() {
-			  if (marker.getAnimation() != null) {
-			    marker.setAnimation(null);
-			  } else {
-			    marker.setAnimation(google.maps.Animation.BOUNCE);
-			  }
-			}
-
-			function loadScript() {
-				console.log("i'm here");
-			  var script = document.createElement('script');
-			  script.type = 'text/javascript';
-			  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBB56byTSi_4iHy_hqH8zN3FQPgb2pm7UQ&sensor=false&' +
-			      'callback=initialize';
-			  document.body.appendChild(script);
-			}
-
-			//window.onload = loadScript;
-
-			var getGoogleLocation = function(callback) {
-				if (navigator.geolocation) {
-					navigator.geolocation.getCurrentPosition(function(location) {
-						callback(new google.maps.LatLng(location.coords.latitude, location.coords.longitude));
-					});
-				} else {
-					throw new Error("Your browser doesn't support geolocation");
-				}
-			};
+			this.delegateEvents();
+			loadScript();
+		},
+		back: function() {
+			new ProfileView();
+			this.undelegateEvents();
+			delete this;
 		}
 	});
 
