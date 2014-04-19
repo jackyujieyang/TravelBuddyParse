@@ -237,9 +237,6 @@ $(function() {
 						if (email != "") {
 							user.setEmail(email);
 						}
-						if (topDest != "") {
-							user.set("topDest", topDest);
-						}
 						user.set("imageUrl", images.get("picture").url());
 						user.save(null, {
 							success: function(user) {
