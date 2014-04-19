@@ -18,74 +18,51 @@
   <script src="js/app.js"></script>
 </head>
 <body>
-<div id="fb-root"></div>
+  <div id="fb-root"></div>
+  <script>
+    //Initialize Parse
+    Parse.initialize("ygllhC3rTkJ6tXIVmYSjeoyFX5f3qzgt6l1zHko6", "mnkxvrJwTcSkgxm492Aa41LoUlLuoKavX6vq403K");
+    //Initialize Facebook
+    window.fbAsyncInit = function() {
+      // init the FB JS SDK
+      Parse.FacebookUtils.init({
+        appId: '772451966098433', // Facebook App ID
+        channelUrl: '//travelbuddydev.parseapp.com/channel.html', // Channel File
+        //status     : true, // check login status
+        cookie: true, // enable cookies to allow Parse to access the session
+        xfbml: true // parse XFBML
+      });
+    };
+    //Async load FB JS SDK
+    (function(d, debug) {
+      var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement('script');
+      js.id = id;
+      js.async = true;
+      js.src = "http://connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+      ref.parentNode.insertBefore(js, ref);
+    }(document, /*debug*/ false));
+  </script>
+
   <!-- App Interface -->
   <div class="container col-xs-12 col-sm-12" id="app">
-  	<div class="content">
-  	</div>
-  </div>
-</div> <!-- End of container -->
+  	<div class="content"></div>
+  </div> <!-- End of container -->
 
   <!-- Templates -->
   
-  <!-- Login Template -->
+  <!-- Top Destination Template -->
 
-  <script type="text/template" id="oldLogin-template">
-    <header id="header"></header>
-    <h1>TravelBuddy</h1>
-    <p class="lead">Connect and meet travelers from all around the world.</p>
-      <div class="login">
-        <form role="form" class="login-form">
-          <h4>Log In</h4>
-          <div class="error" style="display:none"></div>
-          <div class="form-group">
-            <input type="text" class="form-control" id="login-username" placeholder="Username" style="color:black;"/>
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" id="login-password" placeholder="Password" style="color:black;"/>
-          </div>
-          <button class="btn btn-success btn-block">Log In</button>
-        </form>
-
-        <form role="form" class="signup-form">
-          <h4>Sign Up</h4>
-          <div class="error" style="display:none"></div>
-          <div class="form-group">
-            <input type="text" class="form-control" id="signup-username" placeholder="New Username" style="color:black;"/>
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" id="signup-password" placeholder="Create a Password" style="color:black;"/>
-          </div>
-          <button class="btn btn-success btn-block">Sign Up</button>
-        </form>
-      </div>
-  </script>
-
-  <script type="text/template" id="oldInfo-template">
+  <script type="text/template" id="top-dest-template">
     <header id="header"></header>
       <div class="enterinfo">
         <form role="form" class="enterinfo-form">
-          <h2>Complete your information</h2>
+          <h2>Enter a top destination</h2>
           <div class="error" style="display:none"></div>
           <div class="form-group">
-            <label for="inputFirstName">First name</label>
-            <input type="text" id="first-name" placeholder="First Name" style="color:black;"/>
-          </div>
-          <div class="form-group">
-            <label for="inputLastName">Last name</label>
-            <input type="text" id="last-name" placeholder="Last Name" style="color:black;"/>
-          </div>
-          <div class="form-group">
-            <label for="inputEmail">Email address</label>
-            <input type="text" id="email" placeholder="Email" style="color:black;"/>
-          </div>
-          <div class="form-group">
-            <label for="inputEmail">Top destination</label>
+            <label for="inputTopDest">Top destination</label>
             <input type="text" id="top-dest" placeholder="Top Destination" style="color:black;"/>
-          </div>
-          <div class="form-group">          
-            <label> profile picture </label>
-            <input type="file" id="picture" accept="image/*" capture="camera">
           </div>
           <button type="submit" class="btn btn-default">Submit</button>
         </form>
@@ -94,6 +71,8 @@
 
   <script type="text/template" id="oldProfile-template">
   </script>
+
+  <!-- Edit Profile Template -->
 
   <script type="text/template" id="editProfile-template">
       <header id="header"></header>
@@ -116,10 +95,6 @@
             <label for="inputEmail">Email address</label>
             <input type="text" id="email" placeholder="Email" style="color:black;"/>
           </div>
-          <div class="form-group">
-            <label for="inputEmail">Top destination</label>
-            <input type="text" id="top-dest" placeholder="Top Destination" style="color:black;"/>
-          </div>
           <div class="form-group">          
             <label> profile picture </label>
             <input type="file" id="picture" accept="image/*" capture="camera">
@@ -128,6 +103,8 @@
         </form>
       </div>
   </script>
+
+  <!-- Login Template -->
 
   <script type="text/template" id="login-template">
     <div class="inner cover">
@@ -138,32 +115,30 @@
             <h2 class="cover-heading">Travel with others.</h1>
             <p class="lead">Connect and meet travelers from all around the world.</p>
             <p class="lead">
-              <a href="#" class="btn btn-lg btn-default btn-block" id="login">Login With Facebook</a>
+              <button class="btn btn-lg btn-default btn-block" id="login">Login With Facebook</button>
             </p>
           </div>
           <div class="mastfoot">
-            <div class="inner">
-              <p>Beta version designed by <a href="#">Jon Chen</a>, and <a href="#">Alex Kornhauser</a>.</p>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </script>
   
-  <!-- Placeholder image URL: src="./img/facebook-default-no-profile-pic.jpg" -->
   <!-- Profile Page Template -->
+
   <script type="text/template" id="profile-template">
   <div class="inner">
-      <button id="logout" type="button" class="btn btn-danger" style="float:left;">Logout</button>
-      <button id="edit" type="button" class="btn btn-default" style="float:right;">Edit</button>
+      <button id="logout" type="button" class="col-xs-4 btn btn-danger" style="float:left;">Logout</button>
+      <button id="add-top-dest" type="button" class="col-xs-4 btn btn-default" style="float:left;">+ Topdest</button>
+      <button id="edit" type="button" class="col-xs-4 btn btn-default" style="float:right;">Edit</button>
   </div>
   <div class="middle" style="padding-top:10%;padding-bottom:10%">
   <div class="col-xs-12">
-    <h1 class="cover-heading name"></h1>
+    <h3 class="cover-heading name"></h3>
   </div>
   <div class"col-xs-12">
-    <img id="profileImg" alt="Responsive image" height="200" width="200" class="img-circle" >
+    <img id="profileImg" alt="Responsive image" height="150" width="150" class="img-circle" >
   </div>
     <p class="email"></p>
     <p class="top-dest"></p>

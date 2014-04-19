@@ -19,7 +19,6 @@ describe("LoginView", function() {
         query.matches("username","[A-Za-z]*").find({
         //query.equalTo("username","jackyujieyang").find({ 
         	success: function(results) { 
-                Parse.initialize("ygllhC3rTkJ6tXIVmYSjeoyFX5f3qzgt6l1zHko6", "mnkxvrJwTcSkgxm492Aa41LoUlLuoKavX6vq403K");
         			var obj = Parse.User.current();
         			console.log("success block reached");
         	},
