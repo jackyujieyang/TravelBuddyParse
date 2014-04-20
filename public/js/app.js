@@ -101,7 +101,8 @@ $(function() {
 	 */
 	var MatchView = Parse.View.extend({
 		events: {
-			"click #profile": "gotoProfile"
+			"click #profile": "gotoProfile",
+			"select #proximity": "sortResults"
 		},
 		el: ".content",
 		template: _.template($('#home-view-template').html()),
@@ -172,6 +173,9 @@ $(function() {
 			new ProfileView();
 			this.undelegateEvents();
 			delete this;
+		},
+		sortResults: function() {
+			console.log("sorting")
 		}
 	});
 
