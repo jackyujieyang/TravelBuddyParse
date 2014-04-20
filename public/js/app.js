@@ -128,7 +128,7 @@ $(function() {
         				for (var x in result) {
         					var dest = result[x];
         					var match = dest.get("parent");
-        					//if (match.attributes.email != current.getEmail()) {
+        					if (match.attributes.email != current.getEmail()) {
         						var template = $('#home-view-template');
 								var container = template.context.getElementById("matches");
         						var row = document.createElement("div");
@@ -166,7 +166,7 @@ $(function() {
         						row.appendChild(infoDiv);
 
         						container.appendChild(row);
-        					//}
+        					}
         				}
         		},
         		error: function(error) {
