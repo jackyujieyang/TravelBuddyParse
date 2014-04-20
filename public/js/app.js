@@ -34,7 +34,7 @@
 			myLocation = loc;
 			console.log(loc);
 		  var mapOptions = {
-		    zoom: 10,
+		    zoom: 2,
 		    center: myLocation
 		  };
 
