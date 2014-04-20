@@ -101,8 +101,7 @@ $(function() {
 	 */
 	var MatchView = Parse.View.extend({
 		events: {
-			"click #profile": "gotoProfile",
-			"select filter": "filterResults"
+			"click #profile": "gotoProfile"
 		},
 		el: ".content",
 		template: _.template($('#home-view-template').html()),
@@ -123,11 +122,8 @@ $(function() {
         			console.log("success block reached for matchView");
         			$('#matches div').empty(); // clear div for new matches, if any.
         			for (var x in result) {
-        				var match = result[x];
-        				var fbId = destMatch.get("parentFbId");
-        				var User = Parse.Object.extend("User");
-        				var usrQuery = new Parse.Query(User);
-
+        				var dest = result[x];
+        				var match = dest.get("parent");
         				//if (match.attributes.email != current.getEmail()) {
         					var template = $('#home-view-template');
 							var container = template.context.getElementById("matches");
@@ -176,9 +172,6 @@ $(function() {
 			new ProfileView();
 			this.undelegateEvents();
 			delete this;
-		}
-		filterResults: function() {
-
 		}
 	});
 
