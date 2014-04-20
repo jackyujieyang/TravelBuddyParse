@@ -425,6 +425,7 @@ $(function() {
 				var myTopDest = new TopDest();
 				myTopDest.set("topDest", topDest);
 				myTopDest.set("parentFbId", parentFbId);
+				myTopDest.set("parent", Parse.User.current());
 				myTopDest.save(null, {
 					success: function(myTopDest) {
 						console.log("top destination info successfully saved");
@@ -433,8 +434,7 @@ $(function() {
 						delete self;
 					},
 					error: function(myTopDest, error) {
-						alert("Error: " + error.code + error.message);
-						console.log(error);
+						console.log("Error: " + error.code + error.message);
 					}
 				});
 				return false;
