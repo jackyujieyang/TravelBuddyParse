@@ -112,62 +112,74 @@ $(function() {
 		},
 		render: function() {
 			var TopDestination = Parse.Object.extend("TopDestination");
-        	var query = new Parse.Query(TopDestination);
+        	var query1 = new Parse.Query(TopDestination);
+        	var query2 = new Parse.Query(TopDestination);
 
         	var current = Parse.User.current();
-        	var dest = current.get("topDest");
-        	query.equalTo("topDest", dest);
-
-        	query.limit(100).find({
+        	var topDest;
+        	query1.equalTo("parentFbId", current.get("facebookId")).first({
         		success: function(result) {
-        			console.log("success block reached for matchView");
-        			$('#matches div').empty(); // clear div for new matches, if any.
-        			for (var x in result) {
-        				var dest = result[x];
-        				var match = dest.get("parent");
-        				//if (match.attributes.email != current.getEmail()) {
-        					var template = $('#home-view-template');
-							var container = template.context.getElementById("matches");
-        					var row = document.createElement("div");
-        					row.class = "row";
-        					var imageDiv = document.createElement("div");
-        					imageDiv.class = "col-xs-4";
-        					var image = document.createElement("img");
-        					var matchImg = match.get("picture");
-        					image.src = matchImg.url;
-        					image.alt = matchImg.url;
-        					image.class = "img-thumbnail";
-        					imageDiv.appendChild(image);
+        			topDest = result.get("topDest");
+        			console.log(topDest);
+        		query2.equalTo("topDest", topDest).include("parent").find({
+        			success: function(result) {
+        				console.log("success block reached for matchView");
+        				$('#matches div').empty(); // clear div for new matches, if any.
+        				for (var x in result) {
+        					var dest = result[x];
+        					var match = dest.get("parent");
+        					//if (match.attributes.email != current.getEmail()) {
+        						var template = $('#home-view-template');
+								var container = template.context.getElementById("matches");
+        						var row = document.createElement("div");
+	        					row.class = "row";
+    	    					var imageDiv = document.createElement("div");
+        						imageDiv.class = "col-xs-4";
+        						imageDiv.style.display="inline-block";
+        						var image = document.createElement("img");
+        						var matchImg = match.get("imageUrl");
+        						image.src = matchImg;
+        						image.alt = matchImg;
+	        					image.class = "img-thumbnail";
+    	    					image.style.height="100px";
+        						image.style.width="100px";
+        						imageDiv.appendChild(image);
+        						
+        						var infoDiv = document.createElement("div");
+        						infoDiv.class = "col-xs-8";
+        						infoDiv.style.display="inline-block";
+	        					infoDiv.style.padding="2%";
         					
-        					var infoDiv = document.createElement("div");
-        					infoDiv.class = "col-xs-8";
+    	    					var nameText = document.createElement("p");
+        						nameText.style.font="bold";
+        						var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
+        						nameText.appendChild(name);
         					
-        					var nameText = document.createElement("p");
-        					nameText.style.font="bold";
-        					var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
-        					nameText.appendChild(name);
-        					
-        					var destText = document.createElement("p");
-        					var destination = document.createTextNode(match.attributes.topDest);
-        					destText.appendChild(destination);
+        						var destText = document.createElement("p");
+        						var destination = document.createTextNode(dest.get("topDest"));
+        						destText.appendChild(destination);
 
-        					infoDiv.appendChild(nameText);
-        					infoDiv.appendChild(destText);
+	        					infoDiv.appendChild(nameText);
+    	    					infoDiv.appendChild(destText);
 
-        					row.appendChild(imageDiv);
-        					row.appendChild(infoDiv);
+        						row.appendChild(imageDiv);
+        						row.appendChild(infoDiv);
 
-        					container.appendChild(row);
-        				//}
-        			}
+        						container.appendChild(row);
+        					//}
+        				}
         		},
         		error: function(error) {
         			console.log(error);
         		}
         	});
-
-			$(this.el).html(this.template);
-			this.delegateEvents();
+        	},
+        	error: function(error) {
+        		console.log(error);
+        	}
+        });
+		$(this.el).html(this.template);
+		this.delegateEvents();
 		},
 		gotoProfile: function() {
 			new ProfileView();
