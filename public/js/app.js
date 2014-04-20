@@ -176,7 +176,7 @@ $(function() {
 			new ProfileView();
 			this.undelegateEvents();
 			delete this;
-		}
+		},
 		sortResults: function() {
 			console.log("sorting")
 		}
