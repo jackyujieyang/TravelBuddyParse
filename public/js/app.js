@@ -101,7 +101,8 @@ $(function() {
 	 */
 	var MatchView = Parse.View.extend({
 		events: {
-			"click #profile": "gotoProfile"
+			"click #profile": "gotoProfile",
+			"select filter": "filterResults"
 		},
 		el: ".content",
 		template: _.template($('#home-view-template').html()),
@@ -122,7 +123,7 @@ $(function() {
         			console.log("success block reached for matchView");
         			$('#matches div').empty(); // clear div for new matches, if any.
         			for (var x in result) {
-        				var destMatch = result[x];
+        				var match = result[x];
         				var fbId = destMatch.get("parentFbId");
         				var User = Parse.Object.extend("User");
         				var usrQuery = new Parse.Query(User);
@@ -162,7 +163,6 @@ $(function() {
         					container.appendChild(row);
         				//}
         			}
-
         		},
         		error: function(error) {
         			console.log(error);
@@ -176,6 +176,9 @@ $(function() {
 			new ProfileView();
 			this.undelegateEvents();
 			delete this;
+		}
+		filterResults: function() {
+
 		}
 	});
 
