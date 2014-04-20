@@ -102,7 +102,7 @@ $(function() {
 	var MatchView = Parse.View.extend({
 		events: {
 			"click #profile": "gotoProfile",
-			"select filter": "sortResults"
+			"select #proximity": "sortResults"
 		},
 		el: ".content",
 		template: _.template($('#home-view-template').html()),
