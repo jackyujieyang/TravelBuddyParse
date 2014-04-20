@@ -110,8 +110,8 @@ $(function() {
 			this.render();
 		},
 		render: function() {
-			var User = Parse.Object.extend("User");
-        	var query = new Parse.Query(User);
+			var TopDestination = Parse.Object.extend("TopDestination");
+        	var query = new Parse.Query(TopDestination);
 
         	var current = Parse.User.current();
         	var dest = current.get("topDest");
@@ -122,7 +122,11 @@ $(function() {
         			console.log("success block reached for matchView");
         			$('#matches div').empty(); // clear div for new matches, if any.
         			for (var x in result) {
-        				var match = result[x];
+        				var destMatch = result[x];
+        				var fbId = destMatch.get("parentFbId");
+        				var User = Parse.Object.extend("User");
+        				var usrQuery = new Parse.Query(User);
+
         				//if (match.attributes.email != current.getEmail()) {
         					var template = $('#home-view-template');
 							var container = template.context.getElementById("matches");
