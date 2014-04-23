@@ -195,17 +195,52 @@ $(function() {
 
         	var current = Parse.User.current();
         	var topDest;
+        	var lat2;	//user
+        	var long2;	//user 
+        	var obj = [];
+        	var num = 0;
+			var r = 3958;
+     		var pi = 3.14159265359;
+     		var dPerR = 57.29578; 	// Number of degrees/radian (for conversion)
+
+
         	query1.equalTo("parentFbId", current.get("facebookId")).first({
         		success: function(result) {
         			topDest = result.get("topDest");
         		query2.equalTo("topDest", topDest).include("parent").find({
         			success: function(result) {
-        				console.log("success block reached for matchView");
         				$('#matches div').empty(); // clear div for new matches, if any.
         				for (var x in result) {
         					var dest = result[x];
         					var match = dest.get("parent");
+        					if (match.attributes.email == current.getEmail()) {
+        						long2 = match.get("location")._longitude;
+        						lat2 = match.get("location")._latitude;
+        					}
+        				}
+        				for (var x in result) {
+        					var dest = result[x];
+        					var match = dest.get("parent");
         					if (match.attributes.email != current.getEmail()) {
+        						var matchImg = match.get("imageUrl");
+								var name = match.attributes.firstName + " " + match.attributes.lastName
+								var dest = dest.get("topDest");
+								var lat1 = match.get("location")._latitude;
+								var long1 = match.get("location")._longitude;
+								var distance = r*pi*Math.sqrt(Math.pow((lat1-lat2), 2)+
+										Math.cos(lat1/dPerR)*Math.cos(lat2/dPerR)*
+										Math.pow((long1-long2),2))/180;
+								obj[num] = {Name: name, Dest: dest, Distance: distance};
+								num++;
+							}
+						}
+						obj.sort(
+							function(a,b) {
+								return (a.Distance > b.Distance) ? 1 : ((b.Distance > a.Distance) ? -1 : 0);
+							} );
+						console.log(obj);
+
+/*
         						var template = $('#home-view-template');
 								var container = template.context.getElementById("matches");
         						var row = document.createElement("div");
@@ -214,7 +249,7 @@ $(function() {
         						imageDiv.class = "col-xs-4";
         						imageDiv.style.display="inline-block";
         						var image = document.createElement("img");
-        						var matchImg = match.get("imageUrl");
+        						//var matchImg = match.get("imageUrl");
         						image.src = matchImg;
         						image.alt = matchImg;
 	        					image.class = "img-thumbnail";
@@ -229,11 +264,11 @@ $(function() {
         					
     	    					var nameText = document.createElement("p");
         						nameText.style.font="bold";
-        						var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
+        						//var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
         						nameText.appendChild(name);
         					
         						var destText = document.createElement("p");
-        						var destination = document.createTextNode(dest.get("topDest"));
+        						//var destination = document.createTextNode(dest.get("topDest"));
         						destText.appendChild(destination);
 
 	        					infoDiv.appendChild(nameText);
@@ -246,7 +281,7 @@ $(function() {
         						console.log(match.get("location")._latitude);	
         						console.log(match.get("location")._longitude);	
         					}
-        				}
+        				}*/
         		},
         		error: function(error) {
         			console.log(error);
