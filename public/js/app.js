@@ -197,7 +197,7 @@ $(function() {
         	var topDest;
         	var lat2;	//user
         	var long2;	//user 
-        	var obj = [];
+        	var objs = [];
         	var num = 0;
 			var r = 3958;
      		var pi = 3.14159265359;
@@ -222,66 +222,69 @@ $(function() {
         					var dest = result[x];
         					var match = dest.get("parent");
         					if (match.attributes.email != current.getEmail()) {
-        						var matchImg = match.get("imageUrl");
-								var name = match.attributes.firstName + " " + match.attributes.lastName
-								var dest = dest.get("topDest");
 								var lat1 = match.get("location")._latitude;
 								var long1 = match.get("location")._longitude;
-								var distance = r*pi*Math.sqrt(Math.pow((lat1-lat2), 2)+
+								objs[num] = {
+									Name: match.attributes.firstName + " " + match.attributes.lastName, 
+									Dest: dest.get("topDest"), 
+									Distance: r*pi*Math.sqrt(Math.pow((lat1-lat2), 2)+
 										Math.cos(lat1/dPerR)*Math.cos(lat2/dPerR)*
-										Math.pow((long1-long2),2))/180;
-								obj[num] = {Name: name, Dest: dest, Distance: distance};
+										Math.pow((long1-long2),2))/180, 
+									Img: match.get("imageUrl")
+								};
 								num++;
 							}
 						}
-						obj.sort(
+						objs.sort(
 							function(a,b) {
 								return (a.Distance > b.Distance) ? 1 : ((b.Distance > a.Distance) ? -1 : 0);
-							} );
-						console.log(obj);
+							} 
+						);
+						for (var i in objs){
+							var template = $('#home-view-template');
+							var container = template.context.getElementById("matches");
+        					var row = document.createElement("div");
+	        				row.class = "row";
+    	    				var imageDiv = document.createElement("div");
+        					imageDiv.class = "col-xs-4";
+        					imageDiv.style.display="inline-block";
+       						var image = document.createElement("img");
+       						var matchImg = objs[i].Img;
+        					image.src = matchImg;
+        					image.alt = matchImg;
+							image.class = "img-thumbnail";
+	        				image.style.height="100px";
+        					image.style.width="100px";
+        					imageDiv.appendChild(image);    	    			
+    				
+    						var infoDiv = document.createElement("div");
+        					infoDiv.class = "col-xs-8";
+        					infoDiv.style.display="inline-block";
+	       					infoDiv.style.padding="2%";
 
-/*
-        						var template = $('#home-view-template');
-								var container = template.context.getElementById("matches");
-        						var row = document.createElement("div");
-	        					row.class = "row";
-    	    					var imageDiv = document.createElement("div");
-        						imageDiv.class = "col-xs-4";
-        						imageDiv.style.display="inline-block";
-        						var image = document.createElement("img");
-        						//var matchImg = match.get("imageUrl");
-        						image.src = matchImg;
-        						image.alt = matchImg;
-	        					image.class = "img-thumbnail";
-    	    					image.style.height="100px";
-        						image.style.width="100px";
-        						imageDiv.appendChild(image);
+        					var nameText = document.createElement("p");
+        					nameText.style.font="bold";
+        					var name = document.createTextNode(objs[i].Name);
+        					nameText.appendChild(name);
+        			
+        					var destText = document.createElement("p");
+        					var destination = document.createTextNode(objs[i].Dest);
+        					destText.appendChild(destination);
+        					
+        					var disText = document.createElement("p");
+        					var distNum = parseFloat(objs[i].Distance.toPrecision(3));
+        					var distance = document.createTextNode(distNum+" km away");
+        					disText.appendChild(distance);
+	        				
+	        				infoDiv.appendChild(nameText);
+    	    				infoDiv.appendChild(destText);
+							infoDiv.appendChild(disText);
+							
+							row.appendChild(imageDiv);
+        					row.appendChild(infoDiv);
+        					container.appendChild(row);
         						
-        						var infoDiv = document.createElement("div");
-        						infoDiv.class = "col-xs-8";
-        						infoDiv.style.display="inline-block";
-	        					infoDiv.style.padding="2%";
-        					
-    	    					var nameText = document.createElement("p");
-        						nameText.style.font="bold";
-        						//var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
-        						nameText.appendChild(name);
-        					
-        						var destText = document.createElement("p");
-        						//var destination = document.createTextNode(dest.get("topDest"));
-        						destText.appendChild(destination);
-
-	        					infoDiv.appendChild(nameText);
-    	    					infoDiv.appendChild(destText);
-
-        						row.appendChild(imageDiv);
-        						row.appendChild(infoDiv);
-
-        						container.appendChild(row);
-        						console.log(match.get("location")._latitude);	
-        						console.log(match.get("location")._longitude);	
-        					}
-        				}*/
+						}
         		},
         		error: function(error) {
         			console.log(error);
