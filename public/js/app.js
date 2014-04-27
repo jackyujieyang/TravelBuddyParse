@@ -92,6 +92,36 @@ $(function() {
 	};
 
 	/* 
+	 * OtherProfileView
+	 * The OtherProfileView is displayed from the MatchView
+	 * when the user clicks on a match. This leads to the match's
+	 * profile page.
+	 */
+
+	 var OtherProfileView = Parse.View.extend({
+	 	events: {
+	 		"click #back": "gotoMatches"
+	 	},
+	 	el: ".content",
+	 	template: _.template($('#other-profile-template').html()),
+	 	initialize: function() {
+	 		_.bindAll(this, "gotoMatches");
+	 		this.render();
+	 	},
+	 	render: function() {
+	 		$(this.el).html(this.template);
+			this.delegateEvents();
+	 	},
+	 	gotoMatches: function() {
+	 		new MatchView();
+			this.undelegateEvents();
+			delete this;
+	 	}
+	 })
+
+	 var matches = new Array();
+
+	/* 
 	 * MatchView
 	 * The MatchView display a collection of matches
 	 * to the user. The user can click on any of the
@@ -103,7 +133,8 @@ $(function() {
 		events: {
 			"click #profile": "gotoProfile",
 			"click #proximity": "sortResults",
-			"click #dist": "sortResults"
+			"click #dist": "sortResults",
+			"click #otherprofile": "gotoOtherProfile"
 		},
 		el: ".content",
 		template: _.template($('#home-view-template').html()),
@@ -118,75 +149,81 @@ $(function() {
 
         	var current = Parse.User.current();
         	var topDest;
-        	query1.equalTo("parentFbId", current.get("facebookId")).first({
+        	query1.equalTo("parentFbId", current.get("facebookId")).find({
         		success: function(result) {
-        			topDest = result.get("topDest");
-        			console.log(topDest);
-        		query2.equalTo("topDest", topDest).include("parent").find({
-        			success: function(result) {
-        				console.log("success block reached for matchView");
-        				$('#matches div').empty(); // clear div for new matches, if any.
-        				for (var x in result) {
-        					var dest = result[x];
-        					var match = dest.get("parent");
-        					if (match.attributes.email != current.getEmail()) {
-        						var template = $('#home-view-template');
-								var container = template.context.getElementById("matches");
-        						var row = document.createElement("div");
-	        					row.class = "row";
-    	    					var imageDiv = document.createElement("div");
-        						imageDiv.class = "col-xs-4";
-        						imageDiv.style.display="inline-block";
-        						var image = document.createElement("img");
-        						var matchImg = match.get("imageUrl");
-        						image.src = matchImg;
-        						image.alt = matchImg;
-	        					image.class = "img-thumbnail";
-    	    					image.style.height="100px";
-        						image.style.width="100px";
-        						imageDiv.appendChild(image);
+        			for (var i in result) {
+        				topDest = result[i].get("topDest");
+        				console.log(topDest);
+        				query2.equalTo("topDest", topDest).include("parent").find({
+        				success: function(result) {
+        					console.log("success block reached for matchView");
+        					for (var x in result) {
+        						var dest = result[x];
+        						var match = dest.get("parent");
+        						if (match.attributes.email != current.getEmail()) {
+	        						var template = $('#home-view-template');
+									var container = template.context.getElementById("matches");
+        							var row = document.createElement("div");
+	        						row.class = "row";
+	        						row.id = "otherprofile";
+    	    						var imageDiv = document.createElement("div");
+        							imageDiv.class = "col-xs-4";
+        							imageDiv.style.display="inline-block";
+        							var image = document.createElement("img");
+	        						var matchImg = match.get("imageUrl");
+    	    						image.src = matchImg;
+        							image.alt = matchImg;
+	        						image.class = "img-thumbnail";
+    	    						image.style.height="100px";
+        							image.style.width="100px";
+        							imageDiv.appendChild(image);
         						
-        						var infoDiv = document.createElement("div");
-        						infoDiv.class = "col-xs-8";
-        						infoDiv.style.display="inline-block";
-	        					infoDiv.style.padding="2%";
+	        						var infoDiv = document.createElement("div");
+    	    						infoDiv.class = "col-xs-8";
+        							infoDiv.style.display="inline-block";
+	        						infoDiv.style.padding="2%";
         					
-    	    					var nameText = document.createElement("p");
-        						nameText.style.font="bold";
-        						var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
-        						nameText.appendChild(name);
-        					
-        						var destText = document.createElement("p");
-        						var destination = document.createTextNode(dest.get("topDest"));
-        						destText.appendChild(destination);
+    	    						var nameText = document.createElement("p");
+        							nameText.style.font="bold";
+        							var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
+        							nameText.appendChild(name);
+        						
+	        						var destText = document.createElement("p");
+    	    						var destination = document.createTextNode(dest.get("topDest"));
+        							destText.appendChild(destination);
 
-	        					infoDiv.appendChild(nameText);
-    	    					infoDiv.appendChild(destText);
+		        					infoDiv.appendChild(nameText);
+    		    					infoDiv.appendChild(destText);
 
-        						row.appendChild(imageDiv);
-        						row.appendChild(infoDiv);
+	        						row.appendChild(imageDiv);
+    	    						row.appendChild(infoDiv);
 
-        						container.appendChild(row);
+        							container.appendChild(row);
+        						}
         					}
-        				}
-        		},
+	        		},
+    	    		error: function(error) {
+        				console.log(error);
+        			}
+	        	});
+    	    	}},
         		error: function(error) {
         			console.log(error);
-        		}
-        	});
-        	},
-        	error: function(error) {
-        		console.log(error);
-        	}
-        });
-		$(this.el).html(this.template);
-		this.delegateEvents();
-		},
-		gotoProfile: function() {
-			new ProfileView();
-			this.undelegateEvents();
-			delete this;
-		},
+	        	}
+    	    });
+			$(this.el).html(this.template);
+			this.delegateEvents();
+			},
+			gotoProfile: function() {
+				new ProfileView();
+				this.undelegateEvents();
+				delete this;
+			},
+			gotoOtherProfile: function() {
+				new OtherProfileView();
+				this.undelegateEvents();
+				delete this;
+			},
 		sortResults: function() {
 			console.log("sorting");
 			var TopDestination = Parse.Object.extend("TopDestination");
