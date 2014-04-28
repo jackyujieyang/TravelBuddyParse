@@ -119,7 +119,27 @@ $(function() {
 	 	}
 	 })
 
-	 var matches = new Array();
+/*
+* Person object constructor -- made so that we can pass person information 
+* between the the matches view and the match's profile view.
+*/
+function person(obj) {
+	this.obj = obj;
+	this.destinations = new Array();
+}
+
+/*
+* Simple helper function to see if an object is in a list.
+* If it is in the list, return its index. If not, return -1.
+*/
+function containsObject(obj, list) {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i] === obj) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 	/* 
 	 * MatchView
@@ -143,74 +163,115 @@ $(function() {
 			this.render();
 		},
 		render: function() {
+			// Set up the queries
 			var TopDestination = Parse.Object.extend("TopDestination");
         	var query1 = new Parse.Query(TopDestination);
-        	var query2 = new Parse.Query(TopDestination);
 
         	var current = Parse.User.current();
-        	var topDest;
+        	
+        	//matches.length = 0; // clear the matches array to display new matches
+
+        	var topDest; // Will hold the current user's top destination after first query
+        	
+        	// First query gets all of current user's TopDestinations, using their FBId.
         	query1.equalTo("parentFbId", current.get("facebookId")).find({
         		success: function(result) {
+        			
+					//Matches array holds all of the person objects for passing between 
+					//matches view and the match's profile view.
+        			var matches = new Array();
+        			var max = result.length - 1;
         			for (var i in result) {
         				topDest = result[i].get("topDest");
         				console.log(topDest);
+        				var query2 = new Parse.Query(TopDestination);
         				query2.equalTo("topDest", topDest).include("parent").find({
         				success: function(result) {
         					console.log("success block reached for matchView");
+        					var temp = new Array(); // will hold the person objects
         					for (var x in result) {
         						var dest = result[x];
         						var match = dest.get("parent");
         						if (match.attributes.email != current.getEmail()) {
-	        						var template = $('#home-view-template');
-									var container = template.context.getElementById("matches");
-        							var row = document.createElement("div");
-	        						row.class = "row";
-	        						row.id = "otherprofile";
-    	    						var imageDiv = document.createElement("div");
-        							imageDiv.class = "col-xs-4";
-        							imageDiv.style.display="inline-block";
-        							var image = document.createElement("img");
-	        						var matchImg = match.get("imageUrl");
-    	    						image.src = matchImg;
-        							image.alt = matchImg;
-	        						image.class = "img-thumbnail";
-    	    						image.style.height="100px";
-        							image.style.width="100px";
-        							imageDiv.appendChild(image);
-        						
-	        						var infoDiv = document.createElement("div");
-    	    						infoDiv.class = "col-xs-8";
-        							infoDiv.style.display="inline-block";
-	        						infoDiv.style.padding="2%";
-        					
-    	    						var nameText = document.createElement("p");
-        							nameText.style.font="bold";
-        							var name = document.createTextNode(match.attributes.firstName + " " + match.attributes.lastName);
-        							nameText.appendChild(name);
-        						
-	        						var destText = document.createElement("p");
-    	    						var destination = document.createTextNode(dest.get("topDest"));
-        							destText.appendChild(destination);
-
-		        					infoDiv.appendChild(nameText);
-    		    					infoDiv.appendChild(destText);
-
-	        						row.appendChild(imageDiv);
-    	    						row.appendChild(infoDiv);
-
-        							container.appendChild(row);
+        							var p = new person(match);
+        							var index = containsObject(p, temp);
+        							if (index != -1) {
+        								temp[index].destinations.push(topDest);
+        							} else {
+        								p.destinations.push(topDest);
+        								temp.push(p);
+        							}
         						}
         					}
+        					for (var n in temp) {
+        						var o = temp[n];
+        						matches.push(o);
+        					}
+        				if (i == max) {
+	        				var template = $('#home-view-template');
+							var container = template.context.getElementById("matches");
+							for (var index in matches) {
+					        	var match = matches[index];
+
+					        	// Row div
+					        	var row = document.createElement("div");
+						        row.class = "row";
+						        row.id = "otherprofile";
+					    	    
+					    	    // Image div
+					    	    var imageDiv = document.createElement("div");
+					        	imageDiv.class = "col-xs-4";
+					        	imageDiv.style.display="inline-block";
+					        	var image = document.createElement("img");
+						        var matchImg = match.obj.get("imageUrl");
+					    	    image.src = matchImg;
+					        	image.alt = matchImg;
+						        image.class = "img-thumbnail";
+					    	    image.style.height="100px";
+					        	image.style.width="100px";
+					        	imageDiv.appendChild(image);
+					        	
+					        	// Info div, with name and destinatons					
+						        var infoDiv = document.createElement("div");
+					    	    infoDiv.class = "col-xs-8";
+					        	infoDiv.style.display="inline-block";
+						        infoDiv.style.padding="2%";
+					        					
+								var nameText = document.createElement("p");
+					        	nameText.style.font="bold";
+								var name = document.createTextNode(match.obj.attributes.firstName + " " + match.obj.attributes.lastName);
+					        	nameText.appendChild(name);
+								
+					        	var headText = document.createElement("p");
+					        	var headTextNode = document.createTextNode("Matched destinations:");
+					        	headText.appendChild(headTextNode);
+					        	infoDiv.appendChild(nameText);
+					        	infoDiv.appendChild(headText);
+
+							for (var dest in match.destinations) {	        						
+						        var destText = document.createElement("p");
+					    	    var destination = document.createTextNode(match.destinations[dest]);
+					        	destText.appendChild(destination);
+				    			infoDiv.appendChild(destText);
+				    		}
+					        row.appendChild(imageDiv);
+				    	    row.appendChild(infoDiv);
+
+				        	container.appendChild(row);
+				        	}
+				        }
 	        		},
     	    		error: function(error) {
         				console.log(error);
         			}
-	        	});
+	        		});
+        		
     	    	}},
         		error: function(error) {
         			console.log(error);
 	        	}
     	    });
+			
 			$(this.el).html(this.template);
 			this.delegateEvents();
 			},
